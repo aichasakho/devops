@@ -25,18 +25,15 @@ pipeline {
 
     stage('Maven build') {
       steps {
-        sh "$MAVEN_HOME/bin/mvn clean package "
+        sh "${MAVEN_HOME}/bin/mvn clean package "
       }
     }
 
     stage('SonarQube Analysis') {
       steps{
         withSonarQubeEnv('sonar-server') {
-<<<<<<< HEAD
-        sh "$MAVEN_HOME/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=bom-boum  -Dsonar.projectName=bom-boum"
-=======
-        sh "$MAVEN_HOME/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=devops  -Dsonar.projectName=projet-devops"
->>>>>>> c1f3d3b9f56e341abc840d73014d06e88058776b
+          sh "${MAVEN_HOME}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=devops  -Dsonar.projectName=projet-devops"
+
       }
     }
      
