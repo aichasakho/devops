@@ -1,6 +1,7 @@
 pipeline {
   agent any
   tools {
+    jdk 'jdk11'
     maven "Maven"
   }
 
@@ -11,7 +12,7 @@ pipeline {
       NEXUS_PROTOCOL = "http"
       NEXUS_URL = "http://172.20.5.10:8081"
       NEXUS_REPOSITORY = "RepositoryJenkins"
-      NEXUS_CREDENTIAL_ID = "nexusCredential"
+      NEXUS_CREDENTIAL_ID = "nexus"
       ARTIFACT_VERSION = "${BUILD_NUMBER}"
   }
   
@@ -24,14 +25,14 @@ pipeline {
 
     stage('Maven build') {
       steps {
-        sh "${mvn}/bin/mvn clean package "
+        sh "$MAVEN_HOME/bin/mvn clean package "
       }
     }
 
     stage('SonarQube Analysis') {
       steps{
         withSonarQubeEnv('sonar-server') {
-        sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=bom-boum  -Dsonar.projectName=bom-boum"
+        sh "$MAVEN_HOME/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=bom-boum  -Dsonar.projectName=bom-boum"
       }
     }
      
