@@ -25,7 +25,7 @@ pipeline {
     stage('SonarQube Analysis') {
       steps{
         withSonarQubeEnv('sonar-server') {
-        sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=devops-aicha -Dsonar.projectName=devops-aicha -Dsonar.login=sqp_778012cc8939d601645358638e0f7f9534ca1cd5"
+        sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=devops-aicha -Dsonar.projectName=devops-aicha -Dsonar.login=sqp_03c16cae99695c771a2414f2faf5fbbde79459df"
       }
     }
 
