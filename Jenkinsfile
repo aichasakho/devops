@@ -11,7 +11,7 @@ pipeline {
       NEXUS_PROTOCOL = "http"
       NEXUS_URL = "http://172.20.5.10:8081"
       NEXUS_REPOSITORY = "RepositoryJenkins"
-      NEXUS_CREDENTIAL_ID = "nexusCredential"
+      NEXUS_CREDENTIAL_ID = "nexus"
       ARTIFACT_VERSION = "${BUILD_NUMBER}"
   }
   
@@ -31,7 +31,7 @@ pipeline {
     stage('SonarQube Analysis') {
       steps{
         withSonarQubeEnv('sonar-server') {
-        sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=devops  -Dsonar.projectName=projet-devops"
+        sh "$MAVEN_HOME/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=devops  -Dsonar.projectName=projet-devops"
       }
     }
      
