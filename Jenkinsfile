@@ -1,63 +1,46 @@
 pipeline {
-  agent any
-  tools {
-    jdk 'jdk11'
-    maven "Maven"
-  }
+    agent any
 
-  environment {
-      def mvn = tool 'Maven'
-
-      NEXUS_VERSION = "nexus3"
-      NEXUS_PROTOCOL = "http"
-      NEXUS_URL = "http://172.20.5.10:8081"
-      NEXUS_REPOSITORY = "RepositoryJenkins"
-      NEXUS_CREDENTIAL_ID = "nexus"
-      ARTIFACT_VERSION = "${BUILD_NUMBER}"
-  }
-  
-  stages {
-    stage('Git Check out') {
-      steps{
-        checkout scm
-      } 
+    environment {
+        mvn = tool 'Maven'
     }
 
-    stage('Maven build') {
-      steps {
-        sh "$MAVEN_HOME/bin/mvn clean package "
-      }
+    tools {
+        jdk 'JDK_11'
+        maven 'Maven'
     }
 
+    stages {
+        stage('Git Check out') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Maven build') {
+            steps {
+                sh "mvn clean package"
+            }
+        }
     stage('SonarQube Analysis') {
       steps{
         withSonarQubeEnv('sonar-server') {
-<<<<<<< HEAD
-        sh "$MAVEN_HOME/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=bom-boum  -Dsonar.projectName=bom-boum"
-=======
-        sh "$MAVEN_HOME/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=devops  -Dsonar.projectName=projet-devops"
->>>>>>> c1f3d3b9f56e341abc840d73014d06e88058776b
+        sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=devops-aicha -Dsonar.projectName=devops-aicha -Dsonar.login=sqp_389d39d71f1ff7bad90b1fcc42cf256165085f0f"
       }
     }
-     
+
   }
 
-  stage("publish to nexus") {
+        stage('Publish to Nexus') {
             steps {
                 script {
-                    // Read POM xml file using 'readMavenPom' step , this step 'readMavenPom' is included in: https://plugins.jenkins.io/pipeline-utility-steps
-                    pom = readMavenPom file: "pom.xml";
-                    // Find built artifact under target folder
-                    filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
-                    // Print some info from the artifact found
-                    echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
-                    // Extract the path from the File found
-                    artifactPath = filesByGlob[0].path;
-                    // Assign to a boolean response verifying If the artifact name exists
-                    artifactExists = fileExists artifactPath;
+                    def pom = readMavenPom file: "pom.xml"
+                    def filesByGlob = findFiles(glob: "target/*.${pom.packaging}")
+                    def artifactPath = filesByGlob[0].path
+                    def artifactExists = fileExists artifactPath
 
-                    if(artifactExists) {
-                        echo "*** File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}";
+                    if (artifactExists) {
+                        echo "* File: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}"
 
                         nexusArtifactUploader(
                             nexusVersion: NEXUS_VERSION,
@@ -68,19 +51,17 @@ pipeline {
                             repository: NEXUS_REPOSITORY,
                             credentialsId: NEXUS_CREDENTIAL_ID,
                             artifacts: [
-                                // Artifact generated such as .jar, .ear and .war files.
                                 [artifactId: pom.artifactId,
                                 classifier: '',
                                 file: artifactPath,
                                 type: pom.packaging]
                             ]
-                        );
-
+                        )
                     } else {
-                        error "*** File: ${artifactPath}, could not be found";
+                        error "* File: ${artifactPath}, could not be found"
                     }
                 }
             }
         }
- }
+    }
 }
