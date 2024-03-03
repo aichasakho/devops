@@ -12,7 +12,7 @@ pipeline {
         ARTIFACT_VERSION = "${BUILD_NUMBER}"
           
   }
-    }
+    
 
     tools {
         jdk 'jdk11'
@@ -81,4 +81,5 @@ pipeline {
             }
         }
  }
+}    
 
