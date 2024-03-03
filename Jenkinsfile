@@ -6,7 +6,7 @@ pipeline {
     }
 
     tools {
-        jdk 'JDK_11'
+        jdk 'jdk11'
         maven 'Maven'
     }
 
