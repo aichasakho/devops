@@ -8,7 +8,7 @@ pipeline {
         NEXUS_PROTOCOL = "http"
         NEXUS_URL = "172.20.5.10:8081"
         NEXUS_REPOSITORY = "RepositoryJenkins"
-        NEXUS_CREDENTIAL_ID = "nexusCredential"
+        NEXUS_CREDENTIAL_ID = "nexus"
         ARTIFACT_VERSION = "${BUILD_NUMBER}"
           
   }
