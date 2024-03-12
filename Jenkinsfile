@@ -9,7 +9,7 @@ pipeline {
         NEXUS_URL = "172.19.0.3:8081"
         NEXUS_REPOSITORY = "RepositoryJenkins"
         NEXUS_CREDENTIAL_ID = "nexusCredential"
-        ARTIFACT_VERSION = "${BUILD_NUMBER}"
+        ARTIFACT_VERSION = "1.0-SNAPSHOT"
           
   }
     
