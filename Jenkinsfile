@@ -6,7 +6,7 @@ pipeline {
        
         NEXUS_VERSION = "nexus3"
         NEXUS_PROTOCOL = "http"
-        NEXUS_URL = "172.19.0.3:8081"
+        NEXUS_URL = "http://localhost:8081/"
         NEXUS_REPOSITORY = "RepositoryJenkins"
         NEXUS_CREDENTIAL_ID = "nexus"
         ARTIFACT_VERSION = "1.0-SNAPSHOT"
